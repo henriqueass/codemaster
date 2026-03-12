@@ -34,17 +34,17 @@ const navLinks = document.querySelectorAll('.navlist a');
 // Função para adicionar a classe "active" ao link clicado
 function activeLink() {
   navLinks.forEach(item => item.classList.remove('active')); // Remove a classe "active" de todos os links
-  this.classList.add('active'); // Adiciona a classe "active" al link clicado
+  this.classList.add('active'); // Adiciona a classe "active" ao link clicado
 }
 
 // Adiciona um evento de clique a cada link de navegação
-navLinks.forEach(item => item.addEventListener('click', active));
+navLinks.forEach(item => item.addEventListener('click', activeLink));
 
 // ================== ALTERNAR MODO CLARO/ESCURO =================
 // Função para alternar entre os temas claro e escuro
 function toggleMode() {
   const html = document.documentElement;
-  html.classList.toggle('ligt'); // Alterna a class "light" no elemento HTML
+  html.classList.toggle('light'); // Alterna a class "light" no elemento HTML
 
   // Salva o tema escolhido no localStorage
   const mode = html.classList.contains('light') ? 'light' : 'dark';
@@ -60,8 +60,8 @@ if (savedTheme) {
   document.documentElement.classList.toggle('light', savedTheme === 'light');
 }
 
-// ================= ANIAÇÃO DO TÍTULO =================
-// Seleciona o elemento do título e defina variáveis para a animação
+// ================= ANIMAÇÃO DO TÍTULO =================
+// Seleciona o elemento do título e define variáveis para a animação
 const titleElement = document.querySelector('#name');
 const text = "CODEMASTER";
 let index = 0;
@@ -84,9 +84,7 @@ function animateText() {
     } else {
       isTyping = true; // Alterna para o modo de digitação
       // Alterna a cor do texto entre branco/preto e laranja
-      currentColor = currentColor === (document.documentElement.classList.contains
-      ('light') ? 'black' : '#fff') ? '#C94C16' : (document.documentElement.classList.
-      contains('light') ? 'black' : '#fff');
+      currentColor = currentColor === (document.documentElement.classList.contains('light') ? 'black' : '#fff') ? '#C94C16' : (document.documentElement.classList.contains('light') ? 'black' : '#fff');
       titleElement.style.color = currentColor;       
     }
   }
@@ -132,7 +130,7 @@ sections.forEach((section, index) => {
 });
 
 // Observer para animar as seções ao rolar a página
-const Observer = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.style.opacity = '1';
@@ -142,25 +140,25 @@ const Observer = new IntersectionObserver((entries) => {
 });
 
 // Observa cada seção para aplicar a animação
-sections.forEach((section) => Observer.observe(section));
+sections.forEach((section) => observer.observe(section));
 
 // ================= BOTÃO DE VOLTAR AO TOPO =================
 // Adiciona um evento de clique ao botão de voltar ao topo
 document.querySelector('.top a').addEventListener('click', (e) => {
   e.preventDefault();
-  window.scrollTo({ top: 0, behavior: 'smooth'}); // Rola suavemente para o topo da página
+  window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo da página
 });
 
 // ================= CARROSSEL DE PROJETOS =================
 // Seleciona os elementos do carrossel
-const carouseSlides = document.querySelector('.carousel-slides');
+const carouselSlides = document.querySelector('.carousel-slides');
 const slides = document.querySelectorAll('.carousel-slide');
 const prevButton = document.querySelector('.carousel-button.prev');
 const nextButton = document.querySelector('.carousel-button.next');
-let carouseSlide = 0;
+let currentSlide = 0;
 let autoSlideInterval;
 
-// Função para exibe o slide atual
+// Função para exibir o slide atual
 function showSlide(slideIndex) {
   slides.forEach(slide => {
     slide.classList.remove('active');
@@ -168,20 +166,20 @@ function showSlide(slideIndex) {
   });
 
   // Ajusta o índice do slide para garantir que ele esteja dentro dos limites
-  if (slideIndex < 0) currentSlide = slides.length -1;
-  else if (slideIndex >= slides.length) carouseSlide = 0;
+  if (slideIndex < 0) currentSlide = slides.length - 1;
+  else if (slideIndex >= slides.length) currentSlide = 0;
   else currentSlide = slideIndex;
 
   // Exibe o slide atual
-  slides[carouseSlide].classList.add('active');
-  slides[carouseSlide].style.display = 'flex';
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].style.display = 'flex';
   updateSlidePosition();
 }
 
 // Função para atualizar a posição do carrossel
 function updateSlidePosition() {
   const slideWidth = slides[0].offsetWidth;
-  carouseSlides.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+  carouselSlides.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
 }
 
 // Função para avançar para o próximo slide
@@ -192,13 +190,13 @@ function nextSlide() {
 
 // Função para voltar ao slide anterior
 function prevSlide() {
-  showSlide(currentSlide -1);
-  resetAutoSlide(); // Reinicia  o intervalo de transião automática
+  showSlide(currentSlide - 1);
+  resetAutoSlide(); // Reinicia o intervalo de transião automática
 }
 
-// Função para iniciar a transição  automática dos slides
+// Função para iniciar a transição automática dos slides
 function startAutoSlide() {
-    autoSlideInterval = setInterval(nextSlide, 5000); // Avança o slide a cada 5 segunds
+    autoSlideInterval = setInterval(nextSlide, 5000); // Avança o slide a cada 5 segundos
 }
 
 // Função para reiniciar a transição automática
@@ -209,7 +207,7 @@ function resetAutoSlide() {
 
 // Adiciona eventos de clique aos botões de navegação do carrossel
 nextButton.addEventListener('click', nextSlide);
-prevButton.addEventListener('click', nextSlide);
+prevButton.addEventListener('click', prevSlide);
 
 // Inicializa o carrossel ao carregar a página
 window.addEventListener('load', () => {
@@ -223,12 +221,12 @@ window.addEventListener('load', () => {
 });
 
 // Pausa a transição automática ao passar o mouse sobre o carrossel
-carouseSlides.parentElement.addEventListener('mouseenter', () => {
+carouselSlides.parentElement.addEventListener('mouseenter', () => {
   clearInterval(autoSlideInterval);
 });
 
 // Retoma a transição automática ao remover o mouse do carrossel
-carouseSlides.parentElement.addEventListener('mouseleave', startAutoSlide);
+carouselSlides.parentElement.addEventListener('mouseleave', startAutoSlide);
 
 // ================= FORMULÁRIO DE CONTATO =================
 // Seleciona o formulário de contato e a mensagem de agradecimento
@@ -240,21 +238,21 @@ contactForm.addEventListener('submit', (e) => {
   e.preventDefault();
   thankYouMessage.style.display = 'block'; // Exibe a mensagem de agradecimento
 
-  // Evia os dados do formulário usando Fetch API
-  const formData = new formData(contactForm);
-  fetch(contactForm.ariaDescription, {
+  // Envia os dados do formulário usando Fetch API
+  const formData = new FormData(contactForm);
+  fetch(contactForm.action, {
     method: 'POST',
     body: formData,
-    headers: {'Accept': 'application/json' }
+    headers: { 'Accept': 'application/json' }
   })
   .then(response => {
     if (response.ok) {
       setTimeout(() => window.location.reload(), 2000); // Recarrega a página após 2 segundos
     } else {
-      alert ('Erro ao enviar formulário. Tente novamente.');
+      alert('Erro ao enviar formulário. Tente novamente.');
     }
   })
-  .catch(() => alert ('Erro na conexão. Tente novamente.'));
+  .catch(() => alert('Erro na conexão. Tente novamente.'));
 });
 
 // ================= ANIMAÇÃO DA SEÇÃO "SOBRE MIM" =================
